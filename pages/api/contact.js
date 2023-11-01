@@ -2,11 +2,11 @@ export default function handler(req, res) {
     if (req.method === 'POST') {
       let nodemailer = require('nodemailer');
   
-      const { emails } = req.body;
+      const { emails, subject, from } = req.body;
       
       const transporter = nodemailer.createTransport({
         port: 465,
-        host: "smtp-relay.sendinblue.com",
+        host: process.env.EMAIL_HOST,
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS
@@ -15,8 +15,8 @@ export default function handler(req, res) {
       });
   
       const mailData = {
-        from: 'info@funfsterne.de',
-        subject: `Subject for Email`,
+        from: from,
+        subject: subject, 
         html: `<div>Email content...</div>`
       };
   

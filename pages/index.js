@@ -4,6 +4,8 @@ import * as XLSX from 'xlsx';
 
 export default function Home() {
   const [file, setFile] = useState(null);
+  const [subject, setSubject] = useState('');
+  const [from, setFrom] = useState('');
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -45,7 +47,7 @@ export default function Home() {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ emails })
+      body: JSON.stringify({ emails, subject, from })
     }).then((res) => {
       if (res.ok) {
         Swal.fire(
@@ -53,6 +55,9 @@ export default function Home() {
           'E-postalar gönderildi.',
           'success'
         )
+        setFile(null);
+        setSubject('');
+        setFrom('');
       } else {
         Swal.fire(
           'Hata!',
@@ -64,13 +69,51 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
+    <main className="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+    <div className="bg-white shadow-xl rounded-lg p-8 max-w-lg w-full">
       <form className="flex flex-col" onSubmit={handleSubmit}>
-        <input type="file" onChange={handleFileChange} accept=".xlsx, .xls" />
-        <button className="bg-slate-800 text-white rounded p-3 mt-5" type="submit">
-          Send
+        <h2 className="text-2xl font-bold mb-4 text-gray-800">E-posta Gönderimi</h2>
+        <label className="block mb-2 text-gray-700" htmlFor="from-input">
+          Gönderen
+        </label>
+        <input
+          id="from-input"
+          type="text"
+          placeholder="info@example.com"
+          value={from}
+          onChange={(e) => setFrom(e.target.value)}
+          className="mb-4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+        />
+        <label className="block mb-2 text-gray-700" htmlFor="subject-input">
+          Konu
+        </label>
+        <input
+          id="subject-input"
+          type="text"
+          placeholder="E-posta Konusu"
+          value={subject}
+          onChange={(e) => setSubject(e.target.value)}
+          className="mb-4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+        />
+        <label className="block mb-2 text-gray-700" htmlFor="file-input">
+          Dosya Yükleme
+        </label>
+        <input
+          id="file-input"
+          type="file"
+          onChange={handleFileChange}
+          accept=".xlsx, .xls"
+          className="mb-4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+        />
+        <button
+          type="submit"
+          className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors"
+        >
+          E-postaları Gönder
         </button>
       </form>
+    </div>
+
     </main>
   )
 }
